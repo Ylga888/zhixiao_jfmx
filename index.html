@@ -102,6 +102,28 @@ th{background:#f1f5f9}
       </div>
     </div>
 
+    <!-- 新增第三组四融产品 -->
+    <div class="group-block">
+      <div class="group-title">四融产品【第三组】</div>
+      <div class="form-item">
+        <label>四融产品类型3</label>
+        <select id="fourProductType3">
+          <option value="千里眼">千里眼</option>
+          <option value="FTTO">FTTO</option>
+          <option value="云电脑">云电脑</option>
+          <option value="安全卫士">安全卫士</option>
+        </select>
+      </div>
+      <div class="form-item">
+        <label>四融产品数量3</label>
+        <input type="number" id="fourCount3" min="0" step="1" value="0">
+      </div>
+      <div class="form-item">
+        <label>四融单个产品资费3（元）</label>
+        <input type="number" id="fourSingleFee3" min="0" step="0.01" value="0">
+      </div>
+    </div>
+
     <div class="form-item">
       <label>优惠折扣（1代表无折扣，0.8代表8折）</label>
       <input type="number" id="discount" placeholder="0~1" step="0.01" min="0" max="1" value="1">
@@ -125,7 +147,7 @@ th{background:#f1f5f9}
 
     <div class="group-block">
       <div class="group-title">重点产品条数（填完成条数，整数）</div>
-      <div class="desc">目标：商客规模4条、专线3条、企宽3条；专线超出目标条数抵扣企宽缺口；专线完成率*0.3+企宽完成率 ≤1；商客规模完成率不设上限；四融额外激励不计入阶梯判断累计积分</div>
+      <div class="desc">目标：商客规模4条、专线3条、企宽3条；专线超出目标条数抵扣企宽缺口；专线完成率*0.3+企宽完成率 ≤1；商客规模完成率无上限</div>
       <div class="form-item">
         <label>商客规模完成条数</label>
         <input type="number" id="cntShangKe" min="0" step="1" value="0">
@@ -160,15 +182,15 @@ th{background:#f1f5f9}
       <div class="result-item"><span>专线加权积分</span><span id="r_lineW">0.00</span></div>
       <div class="result-item"><span>四融产品原价总额</span><span id="r_fourOrigin">0.00</span></div>
       <div class="result-item"><span>四融额外激励积分</span><span id="r_fourReward">0.00</span></div>
-      <div class="result-item"><span>本条业务加权总积分(含四融激励)</span><span id="r_itemTotal">0.00</span></div>
-      <div class="result-item"><span>本条用于阶梯判断B端加权积分(不含四融激励)</span><span id="r_itemBScore">0.00</span></div>
-      <!-- 隐藏中间调试明细 -->
+      <div class="result-item"><span>计入累计的业务积分（阶梯判定用）</span><span id="r_onlyTotalScore">0.00</span></div>
+      <div class="result-item"><span>本条业务提成总积分（含激励）</span><span id="r_itemTotal">0.00</span></div>
       <div class="result-item"><span>重点产品完成率(整体封顶1.3)</span><span id="r_rate">0.00</span></div>
       <div class="result-item"><span>星级系数</span><span id="r_star">1.00</span></div>
       <div class="result-item"><span>当前阶梯提成单价</span><span id="r_unitPrice">0.00</span></div>
       <div class="result-item"><span>本条提成</span><span class="highlight-green" id="r_curComm">0.00</span></div>
       <div class="tip">
-公式：重点产品完成率 = 0.4*商客规模完成率 + 0.3*企宽完成率 + 0.3*个人专线完成率；约束：专线完成率*0.3+企宽完成率*0.3 ≤1；商客规模完成率无上限；整体封顶1.3；转正岗乘本系数，实习不乘。<br/>⚠️阶梯档位累计B端加权积分不含四融额外激励；提成计算包含四融额外激励。
+公式：重点产品完成率 = 0.4*商客规模完成率 + 0.3*企宽完成率 + 0.3*个人专线完成率；约束：专线完成率*0.3+企宽完成率*0.3 ≤1；商客规模完成率无上限；整体封顶1.3；转正岗乘本系数，实习不乘。
+四融激励积分：仅参与提成，不计入累计积分、不影响提成阶梯档位。
       </div>
       <div style="margin-top:10px">
         <button class="btn btn-primary" onclick="saveItem()">保存本条到历史记录</button>
@@ -179,9 +201,8 @@ th{background:#f1f5f9}
   <div class="card">
     <h3>📊全局累计（全部历史自动汇总）</h3>
     <div class="total-summary">
-      <div class="result-item"><span>累计B端加权积分(不含四融激励，用于阶梯)</span><span class="highlight-red" id="g_totalBScore">0.00</span></div>
-      <div class="result-item"><span>累计全部加权积分(含四融激励)</span><span id="g_totalAllScore">0.00</span></div>
-      <div class="result-item"><span>阶梯提成单价（由累计B端加权积分&岗位自动匹配）</span><span id="g_price">0.00</span></div>
+      <div class="result-item"><span>累计B端加权积分(阶梯判定，不含四融激励)</span><span class="highlight-red" id="g_totalScore">0.00</span></div>
+      <div class="result-item"><span>阶梯提成单价（由累计积分&岗位自动匹配）</span><span id="g_price">0.00</span></div>
       <div class="result-item"><span>历史全部业务总提成</span><span class="highlight-green" id="g_allComm">0.00</span></div>
     </div>
     <div>
@@ -245,6 +266,7 @@ function calcDeductLogic(cntShangKe, cntZhuanXian, cntQiKuan){
   const targetSK = 4;
   const targetZX = 3;
   const targetQK = 3;
+  //商客规模完成率不设上限
   let skRate = cntShangKe / targetSK;
 
   let zxExcess = Math.max(0, cntZhuanXian - targetZX);
@@ -256,6 +278,7 @@ function calcDeductLogic(cntShangKe, cntZhuanXian, cntQiKuan){
   let zxRate = zxValid / targetZX;
   let qkRate = qkDeductVal / targetQK;
 
+  //约束：专线完成率*0.3 + 企宽完成率*0.3 ≤1
   let weightedSum = zxRate * 0.3 + qkRate * 0.3;
   if(weightedSum > 1.0){
     let scale = 1.0 / weightedSum;
@@ -278,14 +301,14 @@ let tempItem = null;
 window.onload = loadHistory;
 
 function loadHistory(){
-  const str = localStorage.getItem("directSellHistoryV2");
+  const str = localStorage.getItem("directSellHistory");
   if(str) historyList = JSON.parse(str);
   renderHistory();
   calcGlobalSummary();
 }
 
 function saveHistoryStorage(){
-  localStorage.setItem("directSellHistoryV2",JSON.stringify(historyList));
+  localStorage.setItem("directSellHistory",JSON.stringify(historyList));
 }
 
 function onPostChange(){
@@ -322,6 +345,11 @@ function calcItemLogic(){
   const fCnt2 = Number(document.getElementById("fourCount2").value)||0;
   const fFee2 = Number(document.getElementById("fourSingleFee2").value)||0;
 
+  // 读取第三组四融数据
+  const fType3 = document.getElementById("fourProductType3").value;
+  const fCnt3 = Number(document.getElementById("fourCount3").value)||0;
+  const fFee3 = Number(document.getElementById("fourSingleFee3").value)||0;
+
   const discount = Number(document.getElementById("discount").value)||1;
   const isSame = document.getElementById("isSame").value;
   const isWar = document.getElementById("isWar").value;
@@ -336,12 +364,14 @@ function calcItemLogic(){
 
   const fourOrigin1 = fCnt1 * fFee1;
   const fourOrigin2 = fCnt2 * fFee2;
-  const fourOriginTotal = fourOrigin1 + fourOrigin2;
+  const fourOrigin3 = fCnt3 * fFee3;
+  const fourOriginTotal = fourOrigin1 + fourOrigin2 + fourOrigin3;
   const fourFinalTotal = fourOriginTotal * discount;
 
   const fourReward1 = getFourRewardScore(fType1,fCnt1);
   const fourReward2 = getFourRewardScore(fType2,fCnt2);
-  const fourRewardTotal = fourReward1 + fourReward2;
+  const fourReward3 = getFourRewardScore(fType3,fCnt3);
+  const fourRewardTotal = fourReward1 + fourReward2 + fourReward3;
 
   const lineNoWeight = lineFee;
   let baseCoef = getLineBaseCoef(lineFee);
@@ -350,22 +380,23 @@ function calcItemLogic(){
   }
   let lineWeight = lineFee * baseCoef;
 
-  //B端加权积分：不含四融额外激励（用于阶梯单价判断）
-  let itemBScore = lineWeight + fourFinalTotal;
-  //全部加权积分：包含四融额外激励（用于提成计算）
-  let itemWeightTotal = itemBScore + fourRewardTotal;
+  // 【关键区分】
+  // scoreForLadder：计入累计、判断阶梯单价 → 不含四融激励积分
+  let scoreForLadder = lineWeight + fourFinalTotal;
+  // totalScoreWithReward：提成计算用，包含激励积分
+  let itemWeightTotal = scoreForLadder + fourRewardTotal;
 
   if(isSame === "否"){
-    itemBScore = itemBScore / 2;
+    scoreForLadder = scoreForLadder / 2;
     itemWeightTotal = itemWeightTotal / 2;
   }
 
   if(isWar === "是"){
     if(postType.indexOf("商客")>=0){
-      itemBScore = 0;
+      scoreForLadder = 0;
       itemWeightTotal = 0;
     }else{
-      itemBScore = itemBScore /2;
+      scoreForLadder = scoreForLadder /2;
       itemWeightTotal = itemWeightTotal /2;
     }
   }
@@ -374,7 +405,7 @@ function calcItemLogic(){
 
   return {
     postType,lineFee,isCloud,
-    fType1,fCnt1,fFee1,fType2,fCnt2,fFee2,
+    fType1,fCnt1,fFee1,fType2,fCnt2,fFee2,fType3,fCnt3,fFee3,
     discount,isSame,isWar,
     cntShangKe,cntZhuanXian,cntQiKuan,
     skRate:rateObj.skRate,
@@ -385,16 +416,16 @@ function calcItemLogic(){
     starLevel,starCoeff,
     lineNoWeight,lineWeight,
     fourOriginTotal,fourFinalTotal,fourRewardTotal,
-    itemBScore, //用于阶梯判断，不含四融激励
-    itemWeightTotal //用于提成，含四融激励
+    scoreForLadder,    // 存入历史，用于累计阶梯
+    itemWeightTotal    // 仅用于提成计算
   }
 }
 
 function calcCurrent(){
   const obj = calcItemLogic();
-  //历史累计B端积分（不含四融激励，用来取阶梯单价）
-  const historySumBScore = historyList.reduce((s,item)=> s+Number(item.itemBScore),0);
-  const unitPrice = getLadderPriceByPost(obj.postType, historySumBScore);
+  // 累计积分只累加【阶梯专用积分】，剔除四融激励
+  const historySumScore = historyList.reduce((s,item)=> s+Number(item.scoreForLadder),0);
+  const unitPrice = getLadderPriceByPost(obj.postType, historySumScore);
 
   let thisComm = obj.itemWeightTotal * unitPrice * obj.starCoeff;
   if(obj.postType.includes("转正")){
@@ -410,8 +441,9 @@ function calcCurrent(){
   document.getElementById("r_lineW").textContent = obj.lineWeight.toFixed(2);
   document.getElementById("r_fourOrigin").textContent = obj.fourOriginTotal.toFixed(2);
   document.getElementById("r_fourReward").textContent = obj.fourRewardTotal.toFixed(2);
+
+  document.getElementById("r_onlyTotalScore").textContent = obj.scoreForLadder.toFixed(2);
   document.getElementById("r_itemTotal").textContent = obj.itemWeightTotal.toFixed(2);
-  document.getElementById("r_itemBScore").textContent = obj.itemBScore.toFixed(2);
 
   document.getElementById("r_rate").textContent = obj.rateResult.toFixed(2);
   document.getElementById("r_star").textContent = obj.starCoeff.toFixed(2);
@@ -428,6 +460,9 @@ function resetInput(){
   document.getElementById("fourSingleFee1").value=0;
   document.getElementById("fourCount2").value=0;
   document.getElementById("fourSingleFee2").value=0;
+  // 重置第三组
+  document.getElementById("fourCount3").value=0;
+  document.getElementById("fourSingleFee3").value=0;
   document.getElementById("discount").value=1;
   document.getElementById("isSame").value="否";
   document.getElementById("isWar").value="否";
@@ -459,22 +494,22 @@ function renderHistory(){
   }
   let html = `<table><tr>
 <th>岗位</th>
-<th>B端加权(阶梯用)</th>
-<th>全部加权(提成用)</th>
+<th>阶梯积分(无激励)</th>
+<th>提成总积分(含激励)</th>
 <th>重点完成率</th>
 <th>本条提成</th>
 <th>操作</th>
 </tr>`;
   const postNow = document.getElementById("postType").value;
-  const totalBScore = historyList.reduce((s,i)=>s+Number(i.itemBScore),0);
-  const priceNow = getLadderPriceByPost(postNow,totalBScore);
+  const totalScore = historyList.reduce((s,i)=>s+Number(i.scoreForLadder),0);
+  const priceNow = getLadderPriceByPost(postNow,totalScore);
 
   historyList.forEach((it,idx)=>{
     let comm = it.itemWeightTotal * priceNow * it.starCoeff;
     if(it.postType.includes("转正")) comm *= it.rateResult;
     html += `<tr>
 <td>${it.postType}</td>
-<td>${Number(it.itemBScore).toFixed(2)}</td>
+<td>${Number(it.scoreForLadder).toFixed(2)}</td>
 <td>${Number(it.itemWeightTotal).toFixed(2)}</td>
 <td>${Number(it.rateResult).toFixed(2)}</td>
 <td>${comm.toFixed(2)}</td>
@@ -503,17 +538,16 @@ function clearAllHistory(){
 
 function calcGlobalSummary(){
   const post = document.getElementById("postType").value;
-  const totalBScore = historyList.reduce((sum,item)=> sum + Number(item.itemBScore), 0);
-  const totalAllScore = historyList.reduce((sum,item)=> sum + Number(item.itemWeightTotal), 0);
-  const unitPrice = getLadderPriceByPost(post, totalBScore);
+  //全局累计只统计不含四融激励的积分，用来判定阶梯单价
+  const totalScore = historyList.reduce((sum,item)=> sum + Number(item.scoreForLadder), 0);
+  const unitPrice = getLadderPriceByPost(post, totalScore);
   let totalComm = 0;
   historyList.forEach(it=>{
     let c = it.itemWeightTotal * unitPrice * it.starCoeff;
     if(it.postType.includes("转正")) c *= it.rateResult;
     totalComm +=c;
   })
-  document.getElementById("g_totalBScore").textContent = totalBScore.toFixed(2);
-  document.getElementById("g_totalAllScore").textContent = totalAllScore.toFixed(2);
+  document.getElementById("g_totalScore").textContent = totalScore.toFixed(2);
   document.getElementById("g_price").textContent = unitPrice.toFixed(2);
   document.getElementById("g_allComm").textContent = totalComm.toFixed(2);
 }
