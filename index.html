@@ -36,7 +36,6 @@ th{background:#f1f5f9}
 <body>
 <div class="container">
   <div class="title">直销业绩积分&提成计算器</div>
-
   <div class="card">
     <div class="form-item">
       <label>岗位类型</label>
@@ -59,7 +58,6 @@ th{background:#f1f5f9}
       </select>
       <div class="desc">转正岗位：开启则系数+0.5（加法，不是相乘）</div>
     </div>
-
     <div class="group-block">
       <div class="group-title">四融产品【第一组】</div>
       <div class="form-item">
@@ -80,7 +78,6 @@ th{background:#f1f5f9}
         <input type="number" id="fourSingleFee1" min="0" step="0.01" value="0">
       </div>
     </div>
-
     <div class="group-block">
       <div class="group-title">四融产品【第二组】</div>
       <div class="form-item">
@@ -101,7 +98,6 @@ th{background:#f1f5f9}
         <input type="number" id="fourSingleFee2" min="0" step="0.01" value="0">
       </div>
     </div>
-
     <div class="group-block">
       <div class="group-title">四融产品【第三组】</div>
       <div class="form-item">
@@ -122,7 +118,6 @@ th{background:#f1f5f9}
         <input type="number" id="fourSingleFee3" min="0" step="0.01" value="0">
       </div>
     </div>
-
     <div class="form-item">
       <label>优惠折扣（1代表无折扣，0.8代表8折）</label>
       <input type="number" id="discount" placeholder="0~1" step="0.01" min="0" max="1" value="1">
@@ -143,7 +138,6 @@ th{background:#f1f5f9}
       </select>
       <div class="desc">商客岗战客=是：积分置0；综合岗战客=是：积分除以2</div>
     </div>
-
     <div class="group-block">
       <div class="group-title">重点产品条数（填完成条数，整数）</div>
       <div class="desc">目标：商客规模4条、专线3条、企宽3条；专线超出目标条数抵扣企宽缺口；专线完成率*0.3+企宽完成率 ≤1；商客规模完成率无上限；整体封顶1.3；转正岗乘本系数，实习不乘</div>
@@ -160,7 +154,6 @@ th{background:#f1f5f9}
         <input type="number" id="cntQiKuan" min="0" step="1" value="0" onchange="renderHistory();calcGlobalSummary()">
       </div>
     </div>
-
     <div class="form-item">
       <label>星级直销</label>
       <select id="starLevel">
@@ -170,10 +163,8 @@ th{background:#f1f5f9}
         <option value="三星">三星</option>
       </select>
     </div>
-
     <button class="btn btn-primary" onclick="calcCurrent()">计算本条业务</button>
     <button class="btn btn-gray" onclick="resetInput()">清空表单</button>
-
     <div class="result" id="curResultBox" style="display:none">
       <div class="result-item"><span>专线未加权积分</span><span id="r_lineNo">0.00</span></div>
       <div class="result-item"><span>四融产品总最终资费</span><span id="r_four">0.00</span></div>
@@ -196,7 +187,6 @@ th{background:#f1f5f9}
       </div>
     </div>
   </div>
-
   <div class="card">
     <h3>📊全局累计（全部历史自动汇总）</h3>
     <div class="total-summary">
@@ -208,13 +198,11 @@ th{background:#f1f5f9}
       <button class="btn btn-warn" onclick="clearAllHistory()">清空全部历史记录</button>
     </div>
   </div>
-
   <div class="card">
     <h3>📜业务历史明细</h3>
     <div id="historyWrap"></div>
   </div>
 </div>
-
 <script>
 const POST_RULES = {
   "综合转正直销": {
@@ -234,48 +222,39 @@ const POST_RULES = {
     priceType:"fixed", fixedPrice:2
   }
 };
-
 function getZongHeLadderPrice(totalScore){
   if(totalScore < 500) return 0.3;
   if(totalScore >= 500 && totalScore < 700) return 0.9;
   return 1.5;
 }
-
 function getShangKeLadderPrice(totalScore){
   if(totalScore < 700) return 0.3;
   if(totalScore >= 700 && totalScore < 1050) return 0.9;
   return 1.5;
 }
-
 function getLadderPriceByPost(postType, totalScore){
   if(postType === "综合转正直销") return getZongHeLadderPrice(totalScore);
   if(postType === "商客转正直销") return getShangKeLadderPrice(totalScore);
   if(postType === "综合实习直销" || postType === "商客实习直销") return 2;
   return 0.3;
 }
-
 function getFourRewardScore(productType, count){
   const num = Number(count)||0;
   if(productType === "云电脑") return num * 20;
   if(productType === "FTTO") return num *30;
   return 0;
 }
-
 function calcDeductLogic(cntShangKe, cntZhuanXian, cntQiKuan){
   const targetSK = 4;
   const targetZX = 3;
   const targetQK = 3;
   let skRate = cntShangKe / targetSK;
-
   let zxExcess = Math.max(0, cntZhuanXian - targetZX);
   let zxValid = Math.min(cntZhuanXian, targetZX);
-
   let qkDeductVal = cntQiKuan + zxExcess;
   qkDeductVal = Math.min(qkDeductVal, targetQK);
-
   let zxRate = zxValid / targetZX;
   let qkRate = qkDeductVal / targetQK;
-
   let weightedSum = zxRate * 0.3 + qkRate * 0.3;
   if(weightedSum > 1.0){
     let scale = 1.0 / weightedSum;
@@ -283,15 +262,12 @@ function calcDeductLogic(cntShangKe, cntZhuanXian, cntQiKuan){
     qkRate = qkRate * scale;
     weightedSum = 1.0;
   }
-
   let totalRate = 0.4 * skRate + 0.3 * qkRate + 0.3 * zxRate;
   if(totalRate > 1.3) totalRate = 1.3;
-
   return {
     skRate, qkRate, zxRate, weightedSum, totalRate
   }
 }
-
 // 新增：获取当前全局最新的重点产品完成率
 function getCurrentRateResult(){
   const cntShangKe = Number(document.getElementById("cntShangKe").value)||0;
@@ -300,23 +276,18 @@ function getCurrentRateResult(){
   const rateObj = calcDeductLogic(cntShangKe, cntZhuanXian, cntQiKuan);
   return rateObj.totalRate;
 }
-
 let historyList = [];
 let tempItem = null;
-
 window.onload = loadHistory;
-
 function loadHistory(){
   const str = localStorage.getItem("directSellHistory");
   if(str) historyList = JSON.parse(str);
   renderHistory();
   calcGlobalSummary();
 }
-
 function saveHistoryStorage(){
   localStorage.setItem("directSellHistory",JSON.stringify(historyList));
 }
-
 function onPostChange(){
   const sel = document.getElementById("postType").value;
   const starDom = document.getElementById("starLevel");
@@ -330,7 +301,6 @@ function onPostChange(){
   renderHistory();
   calcGlobalSummary();
 }
-
 function getLineBaseCoef(fee){
   const f = Number(fee)||0;
   if(f >=168) return 1.5;
@@ -338,65 +308,50 @@ function getLineBaseCoef(fee){
   if(f >=88) return 1.1;
   return 1;
 }
-
 function calcItemLogic(){
   const postType = document.getElementById("postType").value;
   const lineFee = Number(document.getElementById("lineFee").value)||0;
   const isCloud = document.getElementById("isCloud").value;
-
   const fType1 = document.getElementById("fourProductType1").value;
   const fCnt1 = Number(document.getElementById("fourCount1").value)||0;
   const fFee1 = Number(document.getElementById("fourSingleFee1").value)||0;
-
   const fType2 = document.getElementById("fourProductType2").value;
   const fCnt2 = Number(document.getElementById("fourCount2").value)||0;
   const fFee2 = Number(document.getElementById("fourSingleFee2").value)||0;
-
   const fType3 = document.getElementById("fourProductType3").value;
   const fCnt3 = Number(document.getElementById("fourCount3").value)||0;
   const fFee3 = Number(document.getElementById("fourSingleFee3").value)||0;
-
   const discount = Number(document.getElementById("discount").value)||1;
   const isSame = document.getElementById("isSame").value;
   const isWar = document.getElementById("isWar").value;
-
   const cntShangKe = Number(document.getElementById("cntShangKe").value)||0;
   const cntZhuanXian = Number(document.getElementById("cntZhuanXian").value)||0;
   const cntQiKuan = Number(document.getElementById("cntQiKuan").value)||0;
-
   const starLevel = document.getElementById("starLevel").value;
-
   const rateObj = calcDeductLogic(cntShangKe, cntZhuanXian, cntQiKuan);
-
   const fourOrigin1 = fCnt1 * fFee1;
   const fourOrigin2 = fCnt2 * fFee2;
   const fourOrigin3 = fCnt3 * fFee3;
   const fourOriginTotal = fourOrigin1 + fourOrigin2 + fourOrigin3;
   const fourFinalTotal = fourOriginTotal * discount;
-
   const fourReward1 = getFourRewardScore(fType1,fCnt1);
   const fourReward2 = getFourRewardScore(fType2,fCnt2);
   const fourReward3 = getFourRewardScore(fType3,fCnt3);
   const fourRewardTotal = fourReward1 + fourReward2 + fourReward3;
-
   const lineNoWeight = lineFee;
   // 未加权总积分 = 专线未加权积分 + 四融最终资费（不含激励）
   const unweightTotal = lineNoWeight + fourFinalTotal;
-
   let baseCoef = getLineBaseCoef(lineFee);
   if(isCloud === "是" && postType.includes("转正")){
     baseCoef += 0.5;
   }
   let lineWeight = lineFee * baseCoef;
-
   let scoreForLadder = lineWeight + fourFinalTotal;
   let itemWeightTotal = scoreForLadder + fourRewardTotal;
-
   if(isSame === "否"){
     scoreForLadder = scoreForLadder / 2;
     itemWeightTotal = itemWeightTotal / 2;
   }
-
   if(isWar === "是"){
     if(postType.indexOf("商客")>=0){
       scoreForLadder = 0;
@@ -406,9 +361,7 @@ function calcItemLogic(){
       itemWeightTotal = itemWeightTotal /2;
     }
   }
-
   const starCoeff = POST_RULES[postType].starCoeff[starLevel];
-
   return {
     postType,lineFee,isCloud,
     fType1,fCnt1,fFee1,fType2,fCnt2,fFee2,fType3,fCnt3,fFee3,
@@ -426,39 +379,31 @@ function calcItemLogic(){
     itemWeightTotal
   }
 }
-
 function calcCurrent(){
   const obj = calcItemLogic();
   const currentRate = getCurrentRateResult();
   const historySumScore = historyList.reduce((s,item)=> s+Number(item.scoreForLadder),0);
   const unitPrice = getLadderPriceByPost(obj.postType, historySumScore);
-
   let thisComm = obj.itemWeightTotal * unitPrice * obj.starCoeff;
   if(obj.postType.includes("转正")){
     thisComm = thisComm * currentRate;
   }
-
   tempItem = {...obj};
   tempItem.thisComm = thisComm;
-
   document.getElementById("r_lineNo").textContent = obj.lineNoWeight.toFixed(2);
   document.getElementById("r_four").textContent = obj.fourFinalTotal.toFixed(2);
   document.getElementById("r_unweightTotal").textContent = obj.unweightTotal.toFixed(2);
   document.getElementById("r_lineW").textContent = obj.lineWeight.toFixed(2);
   document.getElementById("r_fourOrigin").textContent = obj.fourOriginTotal.toFixed(2);
   document.getElementById("r_fourReward").textContent = obj.fourRewardTotal.toFixed(2);
-
   document.getElementById("r_onlyTotalScore").textContent = obj.scoreForLadder.toFixed(2);
   document.getElementById("r_itemTotal").textContent = obj.itemWeightTotal.toFixed(2);
-
   document.getElementById("r_rate").textContent = currentRate.toFixed(2);
   document.getElementById("r_star").textContent = obj.starCoeff.toFixed(2);
   document.getElementById("r_unitPrice").textContent = unitPrice.toFixed(2);
   document.getElementById("r_curComm").textContent = thisComm.toFixed(2);
-
   document.getElementById("curResultBox").style.display="block";
 }
-
 function resetInput(){
   document.getElementById("lineFee").value="";
   document.getElementById("isCloud").value="否";
@@ -471,16 +416,13 @@ function resetInput(){
   document.getElementById("discount").value=1;
   document.getElementById("isSame").value="否";
   document.getElementById("isWar").value="否";
-
   document.getElementById("cntShangKe").value=0;
   document.getElementById("cntZhuanXian").value=0;
   document.getElementById("cntQiKuan").value=0;
-
   document.getElementById("starLevel").value="否";
   document.getElementById("curResultBox").style.display="none";
   tempItem=null;
 }
-
 function saveItem(){
   if(!tempItem){alert("请先计算本条业务！");return;}
   historyList.push(tempItem);
@@ -490,7 +432,6 @@ function saveItem(){
   alert("保存成功！");
   resetInput();
 }
-
 function renderHistory(){
   const wrap = document.getElementById("historyWrap");
   if(historyList.length===0){
@@ -502,7 +443,6 @@ function renderHistory(){
   const postNow = document.getElementById("postType").value;
   const totalScore = historyList.reduce((s,i)=>s+Number(i.scoreForLadder),0);
   const priceNow = getLadderPriceByPost(postNow,totalScore);
-
   let html = `<table><tr>
 <th>岗位</th>
 <th>未加权总积分</th>
@@ -513,10 +453,22 @@ function renderHistory(){
 <th>操作</th>
 </tr>`;
 
+  // 用于总计
+  let sumUnweight = 0;
+  let sumLadderScore = 0;
+  let sumItemTotal = 0;
+  let sumComm = 0;
+
   historyList.forEach((it,idx)=>{
     // 每条业务独立计算提成，套用最新的完成率和阶梯单价
     let comm = it.itemWeightTotal * priceNow * it.starCoeff;
     if(it.postType.includes("转正")) comm *= currentRate;
+
+    sumUnweight += Number(it.unweightTotal);
+    sumLadderScore += Number(it.scoreForLadder);
+    sumItemTotal += Number(it.itemWeightTotal);
+    sumComm += comm;
+
     html += `<tr>
 <td>${it.postType}</td>
 <td>${Number(it.unweightTotal).toFixed(2)}</td>
@@ -527,10 +479,21 @@ function renderHistory(){
 <td><span class="del-btn" onclick="delItem(${idx})">删除</span></td>
 </tr>`;
   })
+
+  //增加总计行
+  html += `<tr style="background:#f1f5f9;font-weight:bold;">
+<td>【总计】</td>
+<td>${sumUnweight.toFixed(2)}</td>
+<td>${sumLadderScore.toFixed(2)}</td>
+<td>${sumItemTotal.toFixed(2)}</td>
+<td>-</td>
+<td>${sumComm.toFixed(2)}</td>
+<td></td>
+</tr>`;
+
   html += "</table>";
   wrap.innerHTML = html;
 }
-
 function delItem(idx){
   if(!confirm("确认删除该条记录？")) return;
   historyList.splice(idx,1);
@@ -538,7 +501,6 @@ function delItem(idx){
   renderHistory();
   calcGlobalSummary();
 }
-
 function clearAllHistory(){
   if(!confirm("确认清空全部历史？不可恢复！")) return;
   historyList = [];
@@ -546,7 +508,6 @@ function clearAllHistory(){
   renderHistory();
   calcGlobalSummary();
 }
-
 function calcGlobalSummary(){
   const post = document.getElementById("postType").value;
   const totalScore = historyList.reduce((sum,item)=> sum + Number(item.scoreForLadder), 0);
